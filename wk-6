@@ -1,0 +1,236 @@
+INDEX.HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Interactive Web Page Assignment</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header>
+        <h1>Interactive Web Page with JavaScript</h1>
+        <button id="toggleThemeBtn">Switch to Dark Mode</button>
+    </header>
+
+    <section id="counterSection">
+        <h2>Counter Button Game</h2>
+        <button id="incrementBtn">Click me!</button>
+        <p>Clicks: <span id="clickCount">0</span></p>
+    </section>
+
+    <section id="faqSection">
+        <h2>FAQ - Click question to toggle answer</h2>
+        <div class="faqItem">
+            <h3 class="faqQuestion">What is JavaScript?</h3>
+            <p class="faqAnswer hidden">JavaScript is a programming language for web development.</p>
+        </div>
+        <div class="faqItem">
+            <h3 class="faqQuestion">What is an event listener?</h3>
+            <p class="faqAnswer hidden">It is a JavaScript function that waits for an event like a click and runs code.</p>
+        </div>
+    </section>
+
+    <section id="formSection">
+        <h2>Registration Form</h2>
+        <form id="registrationForm" novalidate>
+            <label for="nameInput">Name:</label>
+            <input type="text" id="nameInput" name="name" />
+            <small class="error" id="nameError"></small>
+
+            <label for="emailInput">Email:</label>
+            <input type="email" id="emailInput" name="email" />
+            <small class="error" id="emailError"></small>
+
+            <label for="passwordInput">Password:</label>
+            <input type="password" id="passwordInput" name="password" />
+            <small class="error" id="passwordError"></small>
+
+            <button type="submit">Register</button>
+            <p id="formSuccess" class="success-message"></p>
+        </form>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+STYLE.CSS
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #fff;
+    color: #222;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+    background-color: #222;
+    color: #ddd;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+button {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+#counterSection, #faqSection, #formSection {
+    margin-top: 30px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.faqQuestion {
+    cursor: pointer;
+    background-color: #f0f0f0;
+    margin: 5px 0;
+    padding: 8px;
+    border-radius: 3px;
+}
+
+.faqAnswer {
+    margin-left: 15px;
+    padding: 5px 0;
+}
+
+.hidden {
+    display: none;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 6px;
+    margin-top: 3px;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+    height: 16px;
+}
+
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
+
+
+SCRIPT.JSS
+
+
+
+// Toggle light/dark mode feature
+const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+toggleThemeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+        toggleThemeBtn.textContent = 'Switch to Light Mode';
+    } else {
+        toggleThemeBtn.textContent = 'Switch to Dark Mode';
+    }
+});
+
+// Counter button logic
+const incrementBtn = document.getElementById('incrementBtn');
+const clickCountSpan = document.getElementById('clickCount');
+let clickCount = 0;
+incrementBtn.addEventListener('click', () => {
+    clickCount++;
+    clickCountSpan.textContent = clickCount;
+});
+
+// Collapsible FAQ logic
+const faqQuestions = document.querySelectorAll('.faqQuestion');
+faqQuestions.forEach(question => {
+    question.addEventListener('click', () => {
+        const answer = question.nextElementSibling;
+        answer.classList.toggle('hidden');
+    });
+});
+
+// Form validation logic
+const form = document.getElementById('registrationForm');
+const nameInput = document.getElementById('nameInput');
+const emailInput = document.getElementById('emailInput');
+const passwordInput = document.getElementById('passwordInput');
+
+const nameError = document.getElementById('nameError');
+const emailError = document.getElementById('emailError');
+const passwordError = document.getElementById('passwordError');
+const formSuccess = document.getElementById('formSuccess');
+
+function validateName() {
+    if (nameInput.value.trim() === '') {
+        nameError.textContent = 'Name is required.';
+        return false;
+    }
+    nameError.textContent = '';
+    return true;
+}
+
+function validateEmail() {
+    // Simple email regex pattern
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailInput.value.trim() === '') {
+        emailError.textContent = 'Email is required.';
+        return false;
+    } else if (!emailPattern.test(emailInput.value.trim())) {
+        emailError.textContent = 'Please enter a valid email address.';
+        return false;
+    }
+    emailError.textContent = '';
+    return true;
+}
+
+function validatePassword() {
+    const value = passwordInput.value.trim();
+    if (value === '') {
+        passwordError.textContent = 'Password is required.';
+        return false;
+    } else if (value.length < 6) {
+        passwordError.textContent = 'Password must be at least 6 characters.';
+        return false;
+    }
+    passwordError.textContent = '';
+    return true;
+}
+
+nameInput.addEventListener('input', validateName);
+emailInput.addEventListener('input', validateEmail);
+passwordInput.addEventListener('input', validatePassword);
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const nameValid = validateName();
+    const emailValid = validateEmail();
+    const passwordValid = validatePassword();
+
+    if (nameValid && emailValid && passwordValid) {
+        formSuccess.textContent = 'Registration successful!';
+        form.reset();
+    } else {
+        formSuccess.textContent = '';
+    }
+});
+
+
